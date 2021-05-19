@@ -1,17 +1,7 @@
 import * as mongoose from 'mongoose';
 import validator from 'validator';
 
-mongoose.connect('mongodb://127.0.0.1:27017/dsi-assignment', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-}).then(() => {
-  console.log('Connected to the database');
-}).catch(() => {
-  console.log('Something went wrong when conecting to the database');
-});
-
-interface UserInterface {
+export interface UserInterface {
   name: string,
   lastName: string,
   age?: number,
@@ -19,7 +9,7 @@ interface UserInterface {
   password: string,
 }
 
-const UserSchema = new mongoose.Schema({
+export const UserSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -40,6 +30,8 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
+    dropDups: true,
     validate: (value: string) => {
       if (!validator.isEmail(value)) {
         throw new Error('Email must be a valid email string');
@@ -48,16 +40,4 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model<UserInterface>('User', UserSchema);
-
-const user = new User({
-  name: 'Eduardo',
-  lastName: 'Brito',
-  email: 'alu0100783315@ull.edu.es',
-});
-
-user.save().then((result) => {
-  console.log(result);
-}).catch((error) => {
-  console.log(error);
-});
+export const User = mongoose.model<UserInterface>('User', UserSchema);
