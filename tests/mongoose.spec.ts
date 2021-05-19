@@ -49,11 +49,12 @@ describe('Mongoose testing', () => {
       useUnifiedTopology: true,
       useCreateIndex: true,
     }).then(() => {
-      User.updateOne({email: 'test@gmail.com'}).then((result) => {
-        expect(result.nModified).to.equal(1);
-      }).catch((error) => {
-        console.log(error);
-      });
+      User.updateOne({email: 'test@gmail.com'},
+        {runValidators: true}).then((result) => {
+          expect(result.nModified).to.equal(1);
+        }).catch((error) => {
+          console.log(error);
+        });
     }).catch(() => {
       console.log('Something went wrong when conecting to the database');
     });
